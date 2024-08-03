@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include "seg7.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,6 +100,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_USART2_UART_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 
   //Uruchomienie pomiaru dlugosci impulsu zbocza narastajacego na kanale 1 licznika TIM2
@@ -118,10 +120,21 @@ int main(void)
   while (1)
   {
 
+	  //Obsługa czujnika HCSR04:
+	  /*
 	  uint32_t start = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_1);
 	  uint32_t stop = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_2);
 	  printf("value = %.1f cm\n", (stop - start) / 58.0);
 	  HAL_Delay(1000);
+	  */
+
+	  //Wyświetlanie liczb na wyswietlaczu 7-segmentowym:
+	  for(int i = 0; i < 10; i++) {
+
+		  seg7_show_digit(i);
+		  HAL_Delay(500);
+
+	  }
 
     /* USER CODE END WHILE */
 
