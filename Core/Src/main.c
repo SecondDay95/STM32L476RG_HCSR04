@@ -101,12 +101,28 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  //Uruchomienie pomiaru dlugosci impulsu zbocza narastajacego na kanale 1 licznika TIM2
+  //(czasu od impulsu wyzwalajacego pomiar do rozpoczecia pomiaru):
+  HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);
+  //Uruchomienie pomiaru dlugosci impulsu zbocza opadajacego na kanale 2 licznika TIM2:
+  HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);
+  //Uruchomienie sygnalu PWM na kanale 3 licznika TIM2:
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+
+  HAL_Delay(1000);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  uint32_t start = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_1);
+	  uint32_t stop = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_2);
+	  printf("value = %.1f cm\n", (stop - start) / 58.0);
+	  HAL_Delay(1000);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
