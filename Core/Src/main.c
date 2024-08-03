@@ -72,7 +72,16 @@ int __io_putchar(int ch)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	if (htim == &htim6) {
+
 		seg7_update();
+
+	}
+	else if (htim == &htim2) {
+
+		uint32_t start = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_1);
+		uint32_t stop = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_2);
+		seg7_show((stop-start) / 58);
+
 	}
 
 }
@@ -120,11 +129,13 @@ int main(void)
   HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);
   //Uruchomienie sygnalu PWM na kanale 3 licznika TIM2:
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+  //Uruchomienie timera TIM2 w trybie przerwań (przerwanie od przepelnienia licznika tim2):
+  HAL_TIM_Base_Start_IT(&htim2);
 
   //Uruchomienie timera TIM6 w trybie przerwan
   HAL_TIM_Base_Start_IT(&htim6);
 
-  int value = 0;
+  //int value = 0;
 
   HAL_Delay(1000);
 
@@ -153,11 +164,12 @@ int main(void)
 	  }
 	  */
 
+	  /*
 	  //Wyswietlanie liczb na 2 wyswitlaczach 7-segmentowych:
 	   seg7_show(value);
 	   value++;
 	   HAL_Delay(500);
-
+	  */
 
 
 
