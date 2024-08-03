@@ -67,6 +67,16 @@ int __io_putchar(int ch)
 
   return 1;
 }
+
+//Procedura obsługi przerwania wywolywanego przez timer TIM6:
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+
+	if (htim == &htim6) {
+		seg7_update();
+	}
+
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -111,6 +121,11 @@ int main(void)
   //Uruchomienie sygnalu PWM na kanale 3 licznika TIM2:
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
 
+  //Uruchomienie timera TIM6 w trybie przerwan
+  HAL_TIM_Base_Start_IT(&htim6);
+
+  int value = 0;
+
   HAL_Delay(1000);
 
   /* USER CODE END 2 */
@@ -128,6 +143,7 @@ int main(void)
 	  HAL_Delay(1000);
 	  */
 
+	  /*
 	  //Wyświetlanie liczb na wyswietlaczu 7-segmentowym:
 	  for(int i = 0; i < 10; i++) {
 
@@ -135,6 +151,15 @@ int main(void)
 		  HAL_Delay(500);
 
 	  }
+	  */
+
+	  //Wyswietlanie liczb na 2 wyswitlaczach 7-segmentowych:
+	   seg7_show(value);
+	   value++;
+	   HAL_Delay(500);
+
+
+
 
     /* USER CODE END WHILE */
 

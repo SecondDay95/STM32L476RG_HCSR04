@@ -2,6 +2,9 @@
 #include "seg7.h"
 #include "gpio.h"
 
+static uint32_t actual_value;
+static uint32_t active_digit;
+
 static void set_output(uint8_t mask)
 {
 
@@ -31,5 +34,39 @@ void seg7_show_digit(uint32_t value) {
 	};
 
 	set_output(digit[value % 10]);
+
+}
+
+void seg7_show(uint32_t value) {
+
+	actual_value = value;
+
+}
+
+void seg7_update(void) {
+
+	//WYlaczenie 2 wyswietlaczy:
+	HAL_GPIO_WritePin(SEG_1_GPIO_Port, SEG_1_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(SEG_2_GPIO_Port, SEG_2_Pin, GPIO_PIN_SET);
+
+	switch(active_digit) {
+
+	//Wyswietlacz do jednosci:
+	case 0:
+		//Wyswietlenie czesci jednosci liczby dwucyfrowej
+		seg7_show_digit(actual_value);
+		//Wlaczenie wyswietlacza:
+		HAL_GPIO_WritePin(SEG_1_GPIO_Port, SEG_1_Pin, GPIO_PIN_RESET);
+		active_digit = 1;
+		break;
+	case 1:
+		//Wyswietlenie czesci dziesietnej liczby dwucyfrowej:
+		seg7_show_digit(actual_value / 10);
+		//Wlaczenie wyswietlacza:
+		HAL_GPIO_WritePin(SEG_2_GPIO_Port, SEG_2_Pin, GPIO_PIN_RESET);
+		active_digit = 0;
+		break;
+
+	}
 
 }
