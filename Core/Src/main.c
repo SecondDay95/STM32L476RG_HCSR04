@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "opamp.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -135,6 +136,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM6_Init();
   MX_ADC1_Init();
+  MX_OPAMP2_Init();
   /* USER CODE BEGIN 2 */
 
   //Uruchomienie pomiaru dlugosci impulsu zbocza narastajacego na kanale 1 licznika TIM2
