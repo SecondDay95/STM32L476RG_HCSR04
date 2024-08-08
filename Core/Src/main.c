@@ -64,7 +64,7 @@ float static calc_sound_speed(void) {
 	  //Pomiar z przetwornika ADC1:
 	  uint32_t adc_value = HAL_ADC_GetValue(&hadc1);
 	  //Obliczenie wartosci cyfrowej na napiecie, a nastepnie na temperature:
-	  float temp = adc_value * 330.0f / 4096.0f;
+	  float temp = adc_value * 330.0f / 4096.0f/ 4.0f;
 	  //Obliczenie prędkości dzwieku w danej temperaturze:
 	  float speed = 331.8f + 0.6f * temp;
 
@@ -161,6 +161,12 @@ int main(void)
   //Rozpoczecie pomiaru napiecia w trybie ciaglym:
   HAL_ADC_Start(&hadc1);
 
+  //Kalibracja wzmacniacza operacyjnego OPAMP2:
+  HAL_OPAMP_SelfCalibrate(&hopamp2);
+  //Rozpoczecie pomiaru napiecia przez wzmacniacz operacyjny:
+  HAL_OPAMP_Start(&hopamp2);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -196,7 +202,7 @@ int main(void)
 	  //Pomiar z przetwornika ADC1:
 	  //uint32_t adc_value = HAL_ADC_GetValue(&hadc1);
 	  //Obliczenie wartosci cyfrowej na napiecie, a nastepnie na temperature:
-	  //float temp = adc_value * 330.0f / 4096.0f;
+	  //float temp = adc_value * 330.0f / 4096.0f / 4.0f;
 	  //Obliczenie prędkości dzwieku w danej temperaturze:
 	  //float speed = 331.8f + 0.6f * temp;
 	  //printf("ADC = %lu, T = %.1f C, speed = %.1f m/s\n", adc_value, temp, speed);
