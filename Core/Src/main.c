@@ -58,6 +58,19 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+float static calc_sound_speed(void) {
+
+	  //Pomiar z przetwornika ADC1:
+	  uint32_t adc_value = HAL_ADC_GetValue(&hadc1);
+	  //Obliczenie wartosci cyfrowej na napiecie, a nastepnie na temperature:
+	  float temp = adc_value * 330.0f / 4096.0f;
+	  //Obliczenie prędkości dzwieku w danej temperaturze:
+	  float speed = 331.8f + 0.6f * temp;
+
+	  return speed;
+
+}
+
 int __io_putchar(int ch)
 {
   if (ch == '\n') {
@@ -81,7 +94,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 		uint32_t start = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_1);
 		uint32_t stop = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_2);
-		seg7_show((stop-start) / 58);
+		seg7_show((stop-start) * calc_sound_speed() / 20000.0f);
 
 	}
 
@@ -139,7 +152,12 @@ int main(void)
 
   //int value = 0;
 
-  HAL_Delay(1000);
+  //HAL_Delay(1000);
+
+  //Kalibracja przetwornika ADC1:
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+  //Rozpoczecie pomiaru napiecia w trybie ciaglym:
+  HAL_ADC_Start(&hadc1);
 
   /* USER CODE END 2 */
 
@@ -173,6 +191,15 @@ int main(void)
 	   HAL_Delay(500);
 	  */
 
+	  //Pomiar z przetwornika ADC1:
+	  //uint32_t adc_value = HAL_ADC_GetValue(&hadc1);
+	  //Obliczenie wartosci cyfrowej na napiecie, a nastepnie na temperature:
+	  //float temp = adc_value * 330.0f / 4096.0f;
+	  //Obliczenie prędkości dzwieku w danej temperaturze:
+	  //float speed = 331.8f + 0.6f * temp;
+	  //printf("ADC = %lu, T = %.1f C, speed = %.1f m/s\n", adc_value, temp, speed);
+
+	  //HAL_Delay(250);
 
 
     /* USER CODE END WHILE */
